@@ -3,13 +3,14 @@
 
 ## Project Overview
 
-A DevOps mini project demonstrating a complete CI/CD pipeline for a Python application using **Git**, **GitHub**, **GitHub Actions** and **Docker**, tested on an **AWS EC2** server.
+A DevOps mini project demonstrating a complete CI/CD pipeline for a Python application using **Git**, **GitHub**, **GitHub Actions** and **Docker**, deployed to an **AWS EC2** server.
 
 Every time code is pushed to this repository, the pipeline automatically:
 1. Sets up a clean Ubuntu environment
 2. Installs Python and all dependencies
 3. Runs all unit tests using `pytest`
 4. Reports pass/fail status
+5. Deploys the latest code to an AWS EC2 server if the tests pass
 
 ---
 
@@ -24,7 +25,8 @@ cicd-project/
 ├── README.md                     # Project documentation
 └── .github/
     └── workflows/
-        └── ci.yml                # GitHub Actions pipeline definition
+        ├── ci.yml                # CI: runs tests on every push
+        └── deploy.yml            # CD: auto-deploys to AWS EC2 after tests pass
 ```
 
 ---
@@ -55,7 +57,9 @@ All 23 tests pass inside the container.
 
 ## CI/CD Pipeline
 
-The pipeline is defined in `.github/workflows/ci.yml` and runs on every `push` and `pull_request` to `main`.
+### Continuous Integration (`ci.yml`)
+
+Runs on every `push` and `pull_request` to `main`.
 
 | Step | Action |
 |------|--------|
@@ -65,11 +69,17 @@ The pipeline is defined in `.github/workflows/ci.yml` and runs on every `push` a
 | Run tests | Executes `pytest` and fails the pipeline if any test fails |
 | Coverage report | Shows which lines of code are covered by tests |
 
----
+### Continuous Deployment (`deploy.yml`)
 
-## Deployment
+Runs automatically after the CI workflow succeeds.
 
-The Docker image was built and run on an AWS EC2 (Ubuntu) server, accessed over SSH.
+| Step | Action |
+|------|--------|
+| Trigger | Starts only when CI finishes with a green tick |
+| Connect | Logs in to the AWS EC2 (Ubuntu) server over SSH using GitHub Secrets |
+| Update | Pulls the latest code from GitHub |
+| Build | Rebuilds the Docker image |
+| Verify | Runs the tests and the app inside the container |
 
 ---
 
@@ -78,7 +88,7 @@ The Docker image was built and run on an AWS EC2 (Ubuntu) server, accessed over 
 - **Python 3.11**, **pytest**
 - **Docker**
 - **Git**, **GitHub**, **GitHub Actions**
-- **AWS EC2**, **Linux (Ubuntu)**
+- **AWS EC2**, **Linux (Ubuntu)**, **SSH**
 
 ---
 
