@@ -1,0 +1,25 @@
+name: Deploy to EC2
+
+on:
+  workflow_run:
+    workflows: ["CI Pipeline - Python Tests"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ~/cicd-project
+            git pull
+            docker build -t calc-app .
+            docker run --rm calc-app pytest -q
+            docker run --rm calc-app
