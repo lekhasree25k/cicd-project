@@ -1,10 +1,9 @@
 # CI/CD Pipeline for Python Application
-
-![CI Pipeline](https://github.com/YOUR_USERNAME/YOUR_REPO_NAME/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/lekhasree25k/cicd-project/actions/workflows/ci.yml/badge.svg)
 
 ## Project Overview
 
-A DevOps mini project demonstrating a complete CI/CD pipeline for a Python application using **Git**, **GitHub**, and **GitHub Actions**.
+A DevOps mini project demonstrating a complete CI/CD pipeline for a Python application using **Git**, **GitHub**, **GitHub Actions** and **Docker**, tested on an **AWS EC2** server.
 
 Every time code is pushed to this repository, the pipeline automatically:
 1. Sets up a clean Ubuntu environment
@@ -21,6 +20,7 @@ cicd-project/
 ├── app.py                        # Python application (calculator functions)
 ├── test_app.py                   # Unit tests using pytest
 ├── requirements.txt              # Project dependencies
+├── Dockerfile                    # Docker image recipe
 ├── README.md                     # Project documentation
 └── .github/
     └── workflows/
@@ -32,22 +32,24 @@ cicd-project/
 ## How to Run Locally
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-cd YOUR_REPO_NAME
-
-# 2. Install dependencies
+git clone https://github.com/lekhasree25k/cicd-project.git
+cd cicd-project
 pip install -r requirements.txt
-
-# 3. Run the application
 python app.py
-
-# 4. Run the tests
 pytest test_app.py -v
-
-# 5. Run tests with coverage
-pytest test_app.py -v --cov=app --cov-report=term-missing
 ```
+
+---
+
+## Run with Docker
+
+```bash
+docker build -t calc-app .
+docker run --rm calc-app
+docker run --rm calc-app pytest -v
+```
+
+All 23 tests pass inside the container.
 
 ---
 
@@ -55,29 +57,31 @@ pytest test_app.py -v --cov=app --cov-report=term-missing
 
 The pipeline is defined in `.github/workflows/ci.yml` and runs on every `push` and `pull_request` to `main`.
 
-### Pipeline Steps
-
 | Step | Action |
 |------|--------|
 | Checkout | Downloads the latest code onto the runner |
 | Setup Python | Installs Python 3.11 on the Ubuntu runner |
 | Install dependencies | Runs `pip install -r requirements.txt` |
-| Run tests | Executes `pytest` — fails the pipeline if any test fails |
+| Run tests | Executes `pytest` and fails the pipeline if any test fails |
 | Coverage report | Shows which lines of code are covered by tests |
+
+---
+
+## Deployment
+
+The Docker image was built and run on an AWS EC2 (Ubuntu) server, accessed over SSH.
 
 ---
 
 ## Technologies Used
 
-- **Python 3.11** — Application language
-- **pytest** — Testing framework
-- **Git** — Version control
-- **GitHub** — Remote repository hosting
-- **GitHub Actions** — CI/CD automation platform
+- **Python 3.11**, **pytest**
+- **Docker**
+- **Git**, **GitHub**, **GitHub Actions**
+- **AWS EC2**, **Linux (Ubuntu)**
 
 ---
 
 ## Author
 
-Lekha Sree  
-
+Lekha Sree
