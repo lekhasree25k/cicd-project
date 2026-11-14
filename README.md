@@ -3,7 +3,7 @@
 
 ## Project Overview
 
-A DevOps mini project demonstrating a complete CI/CD pipeline for a Python application using **Git**, **GitHub**, **GitHub Actions** and **Docker**, deployed to an **AWS EC2** server.
+A DevOps mini project demonstrating a complete CI/CD pipeline for a Python application using **Git**, **GitHub**, **GitHub Actions** and **Docker**, deployed to an **AWS EC2** server with monitoring and backups.
 
 Every time code is pushed to this repository, the pipeline automatically:
 1. Sets up a clean Ubuntu environment
@@ -83,12 +83,39 @@ Runs automatically after the CI workflow succeeds.
 
 ---
 
+## Monitoring and Backups
+
+- **Uptime monitoring:** Uptime Kuma runs in Docker on the EC2 server and checks the web page every 60 seconds, showing Up/Down status and response time.
+- **Alerts:** a CloudWatch alarm watches the EC2 CPU usage and sends an email through Amazon SNS when it reaches 80% or more.
+- **Backup:** an EBS snapshot of the 8 GiB server disk was created, so the server can be restored if it fails.
+
+### Screenshots
+
+**Uptime Kuma (Up status and response time)**
+
+![Uptime Kuma](uptime-kuma.png)
+
+**CloudWatch alarm (OK state)**
+
+![CloudWatch alarm](cloudwatch-alarm.png)
+
+**EC2 CPU usage**
+
+![CPU usage](cpu-usage.png)
+
+**EBS snapshot (Completed)**
+
+![EBS snapshot](snapshot.png)
+
+---
+
 ## Technologies Used
 
 - **Python 3.11**, **pytest**
 - **Docker**
 - **Git**, **GitHub**, **GitHub Actions**
-- **AWS EC2**, **Linux (Ubuntu)**, **SSH**
+- **AWS EC2**, **EBS**, **CloudWatch**, **SNS**, **Linux (Ubuntu)**, **SSH**
+- **Uptime Kuma**
 
 ---
 
